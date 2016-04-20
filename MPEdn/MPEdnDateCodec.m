@@ -22,19 +22,17 @@ static NSDateFormatter *dateFormatter;
 
 @implementation MPEdnDateCodec
 
-+ (void) initialize
-{
-  if (self == [MPEdnDateCodec class])
-  {
-    // NSDateFormatter is *very* slow to create, pre-allocate one
-    // NB NSDateFormatter is thread safe only in iOS 7+ and OS X 10.9+
-    // TODO warn if being compiled on a platform where this is unsafe
-    dateFormatter = [NSDateFormatter new];
-
-    // NB: hardcoding "-00:00" (UTC) as timezone
-    dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSS'-00:00'";
-    dateFormatter.timeZone = [NSTimeZone timeZoneWithAbbreviation: @"UTC"];
-  }
++ (void) initialize {
+    if (self == [MPEdnDateCodec class]) {
+        // NSDateFormatter is *very* slow to create, pre-allocate one
+        // NB NSDateFormatter is thread safe only in iOS 7+ and OS X 10.9+
+        // TODO warn if being compiled on a platform where this is unsafe
+        dateFormatter = [[NSDateFormatter alloc] init];
+        NSLocale *enUSPOSIXLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        dateFormatter.locale = enUSPOSIXLocale;
+        dateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss.SSXXXXX";
+        dateFormatter.timeZone = [NSTimeZone timeZoneWithAbbreviation: @"UTC"];
+    }
 }
 
 - (id) copyWithZone: (NSZone *) zone
@@ -59,24 +57,19 @@ static NSDateFormatter *dateFormatter;
 
 - (id) readValue: (id) value
 {
-  if ([value isKindOfClass: [NSString class]])
-  {
-    NSDate *date = [dateFormatter dateFromString: value];
-
-    if (date)
-    {
-      return date;
-    } else
-    {
-      return [NSError errorWithDomain: @"MPEdn" code: ERROR_TAG_READER_ERROR
-              userInfo: @{NSLocalizedDescriptionKey :
-                          [NSString stringWithFormat: @"Bad RFC 3339 date: %@", value]}];
+    if ([value isKindOfClass: [NSString class]]) {
+        NSDate *date = [dateFormatter dateFromString: value];
+        
+        if (! date) {
+            return [NSError errorWithDomain: @"MPEdn" code: ERROR_TAG_READER_ERROR
+                                   userInfo: @{NSLocalizedDescriptionKey :
+                                                   [NSString stringWithFormat: @"Bad RFC 3339 date: %@", value]}];
+        }
+        return date;
+    } else {
+        return [NSError errorWithDomain: @"MPEdn" code: ERROR_TAG_READER_ERROR
+                               userInfo: @{NSLocalizedDescriptionKey : @"Expected a string for an inst-tagged date value"}];
     }
-  } else
-  {
-    return [NSError errorWithDomain: @"MPEdn" code: ERROR_TAG_READER_ERROR
-              userInfo: @{NSLocalizedDescriptionKey : @"Expected a string for an inst-tagged date value"}];
-  }
 }
 
 @end

@@ -186,7 +186,8 @@ static BOOL is_sym_punct (unichar ch)
   return (ch >= '!' && ch <= '_' &&
           (ch == '!' || ch == '$' || ch == '%' || ch == '&' || ch == '*' ||
            ch == '+' || ch == '-' || ch == '.' || ch == '=' || ch == '?' ||
-           ch == '_' || ch == '/' || ch == ':' || ch == '#'));
+           ch == '_' || ch == '/' || ch == ':' || ch == '#' || ch == '\'' ||
+           ch == '<' || ch == '>'));
 }
 
 - (unichar) currentEndIdxChar
@@ -300,7 +301,7 @@ static BOOL is_sym_punct (unichar ch)
     {
       unichar lookahead = [self charAt: startIdx + 1];
       
-      if (isalpha (lookahead) || lookahead == 0)
+      if (! isnumber(lookahead) || lookahead == 0)
         [self readNameToken];
       else
         [self readNumberToken];

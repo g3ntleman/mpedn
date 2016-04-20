@@ -26,7 +26,6 @@
 		C98881E8183093A000B25D11 /* MPEdnBase64Codec.m in Sources */ = {isa = PBXBuildFile; fileRef = C98881E6183093A000B25D11 /* MPEdnBase64Codec.m */; };
 		C9FD3A3516C4D04700F3757E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9FD3A3416C4D04700F3757E /* Foundation.framework */; };
 		C9FD3A3A16C4D04700F3757E /* MPEdn.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C9FD3A3916C4D04700F3757E /* MPEdn.h */; };
-		C9FD3A4416C4D04800F3757E /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9FD3A4316C4D04800F3757E /* SenTestingKit.framework */; };
 		C9FD3A4716C4D04800F3757E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9FD3A3416C4D04700F3757E /* Foundation.framework */; };
 		C9FD3A4A16C4D04800F3757E /* libMPEdn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9FD3A3116C4D04700F3757E /* libMPEdn.a */; };
 		C9FD3A5016C4D04800F3757E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C9FD3A4E16C4D04800F3757E /* InfoPlist.strings */; };
@@ -85,8 +84,7 @@
 		C9FD3A3416C4D04700F3757E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C9FD3A3816C4D04700F3757E /* MPEdn-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MPEdn-Prefix.pch"; sourceTree = "<group>"; };
 		C9FD3A3916C4D04700F3757E /* MPEdn.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPEdn.h; sourceTree = "<group>"; };
-		C9FD3A4216C4D04800F3757E /* MPEdnTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MPEdnTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
-		C9FD3A4316C4D04800F3757E /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		C9FD3A4216C4D04800F3757E /* MPEdnTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MPEdnTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9FD3A4D16C4D04800F3757E /* MPEdnTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MPEdnTests-Info.plist"; sourceTree = "<group>"; };
 		C9FD3A4F16C4D04800F3757E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C9FD3A5116C4D04800F3757E /* MPEdnParserTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPEdnParserTests.h; sourceTree = "<group>"; };
@@ -106,7 +104,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C9FD3A4416C4D04800F3757E /* SenTestingKit.framework in Frameworks */,
 				C9FD3A4716C4D04800F3757E /* Foundation.framework in Frameworks */,
 				C9FD3A4A16C4D04800F3757E /* libMPEdn.a in Frameworks */,
 			);
@@ -129,7 +126,7 @@
 			isa = PBXGroup;
 			children = (
 				C9FD3A3116C4D04700F3757E /* libMPEdn.a */,
-				C9FD3A4216C4D04800F3757E /* MPEdnTests.octest */,
+				C9FD3A4216C4D04800F3757E /* MPEdnTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -138,7 +135,6 @@
 			isa = PBXGroup;
 			children = (
 				C9FD3A3416C4D04700F3757E /* Foundation.framework */,
-				C9FD3A4316C4D04800F3757E /* SenTestingKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -228,7 +224,6 @@
 				C9FD3A3D16C4D04800F3757E /* Sources */,
 				C9FD3A3E16C4D04800F3757E /* Frameworks */,
 				C9FD3A3F16C4D04800F3757E /* Resources */,
-				C9FD3A4016C4D04800F3757E /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -237,8 +232,8 @@
 			);
 			name = MPEdnTests;
 			productName = MPEdnTests;
-			productReference = C9FD3A4216C4D04800F3757E /* MPEdnTests.octest */;
-			productType = "com.apple.product-type.bundle.ocunit-test";
+			productReference = C9FD3A4216C4D04800F3757E /* MPEdnTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -246,8 +241,8 @@
 		C9FD3A2816C4D04700F3757E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastTestingUpgradeCheck = 0630;
-				LastUpgradeCheck = 0630;
+				LastTestingUpgradeCheck = 0730;
+				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Matthew Phillips";
 			};
 			buildConfigurationList = C9FD3A2B16C4D04700F3757E /* Build configuration list for PBXProject "MPEdn" */;
@@ -278,22 +273,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		C9FD3A4016C4D04800F3757E /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		C9FD3A2D16C4D04700F3757E /* Sources */ = {
@@ -389,12 +368,13 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(inherited)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MPEdn/MPEdn-Prefix.pch";
 				INFOPLIST_FILE = "MPEdnTests/MPEdnTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "name.mattp.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = AdHoc;
 		};
@@ -408,6 +388,7 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -420,7 +401,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -476,12 +457,13 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(inherited)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MPEdn/MPEdn-Prefix.pch";
 				INFOPLIST_FILE = "MPEdnTests/MPEdnTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "name.mattp.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -491,12 +473,13 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(inherited)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MPEdn/MPEdn-Prefix.pch";
 				INFOPLIST_FILE = "MPEdnTests/MPEdnTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "name.mattp.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};
