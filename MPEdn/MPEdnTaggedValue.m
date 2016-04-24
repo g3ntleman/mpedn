@@ -46,4 +46,8 @@
   [coder encodeObject: _value forKey: @"value"];
 }
 
+- (NSString*) description {
+    return [NSString stringWithFormat: @"%@ (tagged %@)", _value, _tag];
+}
+
 @end
