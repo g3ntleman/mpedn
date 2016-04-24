@@ -37,7 +37,7 @@ static NSDateFormatter *dateFormatter;
 
 - (id) copyWithZone: (NSZone *) zone
 {
-  return [MPEdnDateCodec new];
+  return self;
 }
 
 - (NSString *) tagName

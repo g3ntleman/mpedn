@@ -53,6 +53,11 @@
   return [name hash];
 }
 
+- (id) copyWithZone: (NSZone *) zone
+{
+    return self;
+}
+
 - (NSString *) description
 {
   return [NSString stringWithFormat: @"Symbol: %@", name];

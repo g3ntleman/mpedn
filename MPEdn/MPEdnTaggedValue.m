@@ -35,6 +35,11 @@
                      value: [coder decodeObjectForKey: @"value"]];
 }
 
+- (id) copyWithZone: (NSZone *) zone
+{
+    return self;
+}
+
 - (void) encodeWithCoder: (NSCoder *) coder
 {
   [coder encodeObject: _tag forKey: @"tag"];
