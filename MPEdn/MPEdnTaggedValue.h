@@ -20,7 +20,7 @@
  * Used by MPEdnParser to represent tagged values that have no reader
  * associated with them.
  */
-@interface MPEdnTaggedValue : NSObject<NSCoding>
+@interface MPEdnTaggedValue : NSObject<NSCoding, NSCopying>
 
 /**
  * The tag name.
