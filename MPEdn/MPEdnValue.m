@@ -108,17 +108,14 @@ static NSMutableSet* symbols;
     }
     
     if (self.isKeyword) {
-        [coder writeString: @":"];
-        [coder writeString: self];
+        [coder writeStrings: @":", self, nil];
         return;
     }
     
     NSRange quoteRange = [self rangeOfCharacterFromSet: QUOTE_CHARS];
     
     if (quoteRange.location == NSNotFound) {
-        [coder writeString: @"\""];
-        [coder writeString: self];
-        [coder writeString: @"\""];
+        [coder writeStrings: @"\"", self, @"\"", nil];
     } else {
         NSUInteger start = 0;
         NSUInteger valueLen = [self length];
@@ -219,14 +216,16 @@ static NSMutableSet* symbols;
     
     [coder writeString: @"{"];
     
-    for (id key in self) {
+    for (id<EdnValue> key in self) {
+        id<EdnValue> value = self[key];
+        
         if (!firstItem) {
             [coder writeString: @","];
         }
         
         [coder writeObject: key];
         [coder writeString: @" "];
-        [coder writeObject: self[key]];
+        [coder writeObject: value];
         
         firstItem = NO;
     }
@@ -244,9 +243,10 @@ static NSMutableSet* symbols;
     
     [coder writeString: @"["];
     
-    for (id item in self) {
-        if (!firstItem)
+    for (id<EdnValue> item in self) {
+        if (!firstItem) {
             [coder writeString: @","];
+        }
         
         [coder writeObject: item];
         

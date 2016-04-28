@@ -79,6 +79,7 @@
 - (void) writeObject: (id) value;
 
 - (void) writeString: (NSString*) string;
+- (void) writeStrings: (NSString *) firstArg, ...;
 
 @end
 
