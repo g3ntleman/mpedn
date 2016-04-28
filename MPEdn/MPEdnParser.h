@@ -15,6 +15,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "MPEdnValue.h"
 
 @protocol MPEdnTaggedValueReader;
 
@@ -86,7 +87,7 @@ typedef enum
  * The default reader set handles the built-in EDN "#uuid" and "#inst"
  * tags.
  */
-+ (void) addGlobalTagReader: (id<MPEdnTaggedValueReader>) reader;
+//+ (void) addGlobalTagReader: (id<MPEdnTaggedValueReader>) reader;
 
 /**
  * The string to parse.
@@ -185,7 +186,15 @@ typedef enum
  *
  * @see [MPEdnWriter addTagWriter:]
  */
-- (void) addTagReader: (id<MPEdnTaggedValueReader>) reader;
+//- (void) addTagReader: (id<MPEdnTaggedValueReader>) reader;
+
++ (Class) registeredDefaultClassForEdnTag: (NSString*) tag;
+
++ (void) registerDefaultClass: (Class <EdnTaggedValue>) aClass;
+
+- (Class) registeredClassForEdnTag: (NSString*) tag;
+- (void) deregisterClass: (Class <EdnTaggedValue>) aClass;
+- (void) registerClass: (Class <EdnTaggedValue>) aClass;
 
 /**
  * Called by parser to create a new set instance.
@@ -216,11 +225,5 @@ typedef enum
  * Shortcut to parse a single string with [MPEdnParser parseString:].
  */
 - (id) ednStringToObject;
-
-/**
- * Shortcut to parse a single string with [MPEdnParser parseString:]
- * with the `keywordsAsStrings` property set to true.
- */
-- (id) ednStringToObjectNoKeywords;
 
 @end

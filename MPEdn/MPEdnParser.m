@@ -17,10 +17,7 @@
 #import <objc/runtime.h>
 
 #import "MPEdn.h"
-#import "MPEdnSymbol.h"
-#import "MPEdnDateCodec.h"
-#import "MPEdnUUIDCodec.h"
-#import "MPEdnTaggedValue.h"
+#import "MPEdnValue.h"
 
 // A token is one of these or just a single character.
 typedef enum
@@ -42,10 +39,9 @@ NSString * const MPEDN_TAG_NAME = @"MPEDNTag";
 
 static NSCharacterSet *QUOTE_CHARS;
 
-static NSMutableDictionary *defaultReaders;
+static NSMutableDictionary* defaultTaggedClasses;
 
-static NSDictionary *copy (NSDictionary *dict)
-{
+static NSDictionary *copy(NSDictionary *dict) {
   NSMutableDictionary *dictCopy = [dict mutableCopy];
   
   for (id k in dict)
@@ -59,18 +55,18 @@ static NSDictionary *copy (NSDictionary *dict)
   return dictCopy;
 }
 
-@implementation MPEdnParser
-{
-  NSString *inputStr;
-  NSUInteger startIdx;
-  NSUInteger endIdx;
-  NSUInteger inputStrLen;
-  NSUInteger token;
-  id tokenValue;
-  NSError *error;
-  BOOL keywordsAsStrings;
-  BOOL allowUnknownTags;
-  NSDictionary *readers;
+@implementation MPEdnParser {
+    
+    NSString *inputStr;
+    NSUInteger startIdx;
+    NSUInteger endIdx;
+    NSUInteger inputStrLen;
+    NSUInteger token;
+    id tokenValue;
+    NSError *error;
+    BOOL keywordsAsStrings;
+    BOOL allowUnkno,wnTags;
+    NSDictionary* taggedClasses;
 }
 
 @synthesize keywordsAsStrings;
@@ -78,42 +74,36 @@ static NSDictionary *copy (NSDictionary *dict)
 
 #pragma mark - Init
 
-+ (void) initialize
-{
-  if (self == [MPEdnParser class])
-  {
-    QUOTE_CHARS = [NSCharacterSet characterSetWithCharactersInString: @"\\\""];
++ (void) initialize {
+    if (self == [MPEdnParser class]) {
+        QUOTE_CHARS = [NSCharacterSet characterSetWithCharactersInString: @"\\\""];
+        
+        defaultTaggedClasses = [[NSMutableDictionary alloc] init];
+    }
+}
 
-    MPEdnDateCodec *dateCodec = [MPEdnDateCodec new];
+
++ (Class) registeredDefaultClassForEdnTag: (NSString*) tag {
+    return defaultTaggedClasses[tag];
+}
+
++ (void) registerDefaultClass: (Class) aClass {
+    NSParameterAssert([aClass conformsToProtocol: @protocol(EdnTaggedValue)]);
+    defaultTaggedClasses[[aClass ednTag]] = aClass;
+}
+
+- (id) init {
     
-    defaultReaders =
-      [@{[dateCodec tagName] : dateCodec,
-         [[MPEdnUUIDCodec sharedInstance] tagName] : [MPEdnUUIDCodec sharedInstance]} mutableCopy];
-  }
+    if (self = [super init]) {
+
+        taggedClasses = [defaultTaggedClasses mutableCopy];
+                
+        allowUnknownTags = YES;
+    }
+    return self;
 }
 
-+ (void) addGlobalTagReader: (id<MPEdnTaggedValueReader>) reader
-{
-  @synchronized (self)
-  {
-    [defaultReaders setObject: reader forKey: [reader tagName]];
-  }
-}
-
-- (id) init
-{
-  if (self = [super init])
-  {
-    readers = copy (defaultReaders);
-
-    allowUnknownTags = YES;
-  }
-  
-  return self;
-}
-
-- (void) raiseError: (NSInteger) code message: (NSString *) message, ...
-{
+- (void) raiseError: (NSInteger) code message: (NSString *) message, ... {
   if (!error)
   {
     va_list args;
@@ -131,8 +121,7 @@ static NSDictionary *copy (NSDictionary *dict)
   }
 }
 
-- (void) setInputString: (NSString *) str
-{
+- (void) setInputString: (NSString *) str {
   startIdx = 0;
   endIdx = 0;
   token = TOKEN_NONE;
@@ -168,13 +157,22 @@ static NSDictionary *copy (NSDictionary *dict)
   }
 }
 
-- (void) addTagReader: (id<MPEdnTaggedValueReader>) reader
-{
-  NSMutableDictionary *newReaders = [readers mutableCopy];
-  
-  [newReaders setObject: reader forKey: [reader tagName]];
-  
-  readers = newReaders;
+
+- (Class) registeredClassForEdnTag: (NSString*) tag {
+    return taggedClasses[tag];
+}
+
+- (void) registerClass: (Class <EdnTaggedValue>) aClass {
+    NSParameterAssert([aClass conformsToProtocol: @protocol(EdnTaggedValue)]);
+    NSMutableDictionary* mapping = [taggedClasses mutableCopy];
+    mapping[[aClass ednTag]]=  aClass;
+    taggedClasses = [mapping copy];
+}
+
+- (void) deregisterClass: (Class <EdnTaggedValue>) aClass {
+    NSMutableDictionary* mapping = [taggedClasses mutableCopy];
+    mapping[[aClass ednTag]]= nil;
+    taggedClasses = [mapping copy];
 }
 
 #pragma mark - Tokeniser
@@ -501,22 +499,20 @@ static BOOL is_sym_punct (unichar ch)
   }
 }
 
-- (void) readNameToken
-{
-  unichar ch;
-  
-  do
-  {
-    ch = [self advanceEndIdx];
-  } while (isalnum (ch) || is_sym_punct (ch));
-  
-  token = TOKEN_NAME;
-  tokenValue =
+- (void) readNameToken {
+    unichar ch;
+    
+    do
+    {
+        ch = [self advanceEndIdx];
+    } while (isalnum (ch) || is_sym_punct (ch));
+    
+    token = TOKEN_NAME;
+    tokenValue =
     [inputStr substringWithRange: NSMakeRange (startIdx, endIdx - startIdx)];
 }
 
-- (void) readKeywordToken
-{
+- (void) readKeywordToken {
   unichar ch;
   
   do
@@ -530,10 +526,10 @@ static BOOL is_sym_punct (unichar ch)
   {
     token = TOKEN_KEYWORD;
     
-    NSString *keyword =
+    NSString *string =
       [inputStr substringWithRange: NSMakeRange (startIdx + 1, length)];
     
-    tokenValue = keywordsAsStrings ? keyword : [keyword ednKeyword];
+    tokenValue = [string asKeyword];
   } else
   {
     [self raiseError: ERROR_INVALID_KEYWORD
@@ -621,47 +617,42 @@ static BOOL is_sym_punct (unichar ch)
   }
 }
 
-- (void) readTagName
-{
-  unichar ch;
-  
-  do
-  {
-    ch = [self advanceEndIdx];
-  } while (isalnum (ch) || is_sym_punct (ch));
-  
-  NSInteger tagLen = endIdx - startIdx - 1;
-  
-  if (tagLen > 0)
-  {
-    token = TOKEN_TAG;
-    tokenValue = [inputStr substringWithRange: NSMakeRange (startIdx + 1, tagLen)];
-  } else
-  {
-    [self raiseError: ERROR_INVALID_TAG
-             message: @"Empty tag not allowed"];
-  }
+- (void) readTagName {
+    unichar ch;
+    
+    do
+    {
+        ch = [self advanceEndIdx];
+    } while (isalnum (ch) || is_sym_punct (ch));
+    
+    NSInteger tagLen = endIdx - startIdx - 1;
+    
+    if (tagLen > 0)
+    {
+        token = TOKEN_TAG;
+        tokenValue = [inputStr substringWithRange: NSMakeRange (startIdx + 1, tagLen)];
+    } else
+    {
+        [self raiseError: ERROR_INVALID_TAG
+                 message: @"Empty tag not allowed"];
+    }
 }
 
 #pragma mark - Parser
 
-- (NSMutableSet *) newSet
-{
+- (NSMutableSet *) newSet {
   return [NSMutableSet new];
 }
 
-- (NSMutableArray *) newArray
-{
+- (NSMutableArray *) newArray {
   return [NSMutableArray new];
 }
 
-- (NSMutableDictionary *) newDictionary
-{
+- (NSMutableDictionary *) newDictionary {
   return [NSMutableDictionary new];
 }
 
-- (id) parseString: (NSString *) str
-{
+- (id) parseString: (NSString *) str {
   self.inputString = str;
   
   id value = [self parseNextValue];
@@ -680,13 +671,11 @@ static BOOL is_sym_punct (unichar ch)
   }
 }
 
-- (id) parseNextValue
-{
+- (id) parseNextValue {
   return [self parseExpr];
 }
 
-- (id) parseExpr
-{
+- (id) parseExpr {
   switch (token)
   {
     case TOKEN_NUMBER:
@@ -816,76 +805,61 @@ static BOOL is_sym_punct (unichar ch)
   if ([value isEqualToString: @"nil"])
     return [NSNull null];
   else
-    return [MPEdnSymbol symbolWithName: value];
+    return [value asSymbol];
 }
 
-- (id) parseTag
-{
-  NSString *tag = [self consumeTokenValue];
-  
-  if (token != TOKEN_TAG)
-  {
-    id value = [self parseExpr];
+- (id) parseTag {
+    NSString *tag = [self consumeTokenValue];
     
-    if (!error)
-    {
-      id<MPEdnTaggedValueReader> reader = [readers objectForKey: tag];
-      
-      if (reader)
-      {
-        id tagValue = [reader readValue: value];
+    if (token != TOKEN_TAG) {
+        id value = [self parseExpr];
         
-        if ([tagValue isKindOfClass: [NSError class]])
-        {
-          token = TOKEN_ERROR;
-          error = (NSError *)tagValue;
-          
-          return nil;
-        } else
-        {
-          return tagValue;
+        if (!error) {
+            Class taggedClass = [taggedClasses objectForKey: tag];
+            
+            if (taggedClass) {
+                NSError* localError = nil;
+                id tagValue = [taggedClass newWithEdnString: value error: &localError];
+                
+                if (! tagValue) {
+                    token = TOKEN_ERROR;
+                    error = localError;
+                    return nil;
+                } else {
+                    return tagValue;
+                }
+            } else {
+                if (allowUnknownTags) {
+                    return value;
+                } else {
+                    [self raiseError: ERROR_NO_READER_FOR_TAG
+                             message: @"No class available to handle value %@ for tag #%@", value, tag];
+                }
+                return nil;
+            }
+        } else {
+            return nil;
         }
-      } else
-      {
-        if (allowUnknownTags)
-        {
-          return [[MPEdnTaggedValue alloc] initWithTag: tag value: value];
-        } else
-        {
-          [self raiseError: ERROR_NO_READER_FOR_TAG
-                message: @"Do not know how to handle value for tag #%@", tag];
-        }
+    } else {
+        [self raiseError: ERROR_INVALID_TAG
+                 message: @"Cannot follow a tag with another tag"];
         
         return nil;
-      }
-    } else
-    {
-      return nil;
     }
-  } else
-  {
-    [self raiseError: ERROR_INVALID_TAG
-             message: @"Cannot follow a tag with another tag"];
-    
-    return nil;
-  }
 }
 
-- (id) parseDiscard
-{
-  [self nextToken];
-  [self parseExpr];
-  
-  if (token != TOKEN_END && token != TOKEN_ERROR)
-  {
-    return [self parseExpr];
-  } else
-  {
-    [self raiseError: ERROR_INVALID_DISCARD
-             message: @"No expression following discard (#_) symbol"];
+- (id) parseDiscard {
+    [self nextToken];
+    [self parseExpr];
     
-    return nil;
-  }
+    if (token != TOKEN_END && token != TOKEN_ERROR) {
+        return [self parseExpr];
+    } else {
+        [self raiseError: ERROR_INVALID_DISCARD
+                 message: @"No expression following discard (#_) symbol"];
+        
+        return nil;
+    }
 }
 
 @end
@@ -897,13 +871,5 @@ static BOOL is_sym_punct (unichar ch)
   return [[MPEdnParser new] parseString: self];
 }
 
-- (id) ednStringToObjectNoKeywords
-{
-  MPEdnParser *parser = [MPEdnParser new];
-  
-  parser.keywordsAsStrings = YES;
-  
-  return [parser parseString: self];
-}
 
 @end

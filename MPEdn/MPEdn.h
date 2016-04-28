@@ -17,6 +17,6 @@
 #import <Foundation/Foundation.h>
 
 #import "MPEdnParser.h"
-#import "MPEdnWriter.h"
-#import "MPEdnKeyword.h"
+#import "MPEdnCoder.h"
+#import "MPEdnValue.h"
 
