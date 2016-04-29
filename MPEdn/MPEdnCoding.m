@@ -38,7 +38,7 @@ static NSMutableSet* symbols;
     if (! keywords) {
         symbols = [[NSMutableSet alloc] initWithCapacity: 20];
         NSMutableCharacterSet* nonSymbolChars =
-        [NSMutableCharacterSet characterSetWithCharactersInString: @"*+!-_?'"];
+        [NSMutableCharacterSet characterSetWithCharactersInString: @"*+!-<>=/_?'"];
         [nonSymbolChars formUnionWithCharacterSet: [NSCharacterSet alphanumericCharacterSet]];
         [nonSymbolChars invert];
         NON_SYMBOL_CHARS = [nonSymbolChars copy];
