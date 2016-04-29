@@ -137,55 +137,42 @@
   MPAssertSerialisesOK (@{[@"e4faee275bb1740e2001d285a052474300c6921a" asKeyword] : @1}, @"{:e4faee275bb1740e2001d285a052474300c6921a 1}");
 }
 
-- (void) testTags {
+- (void) testDates {
     // date
-    {
-        NSDate *date = [NSDate dateWithTimeIntervalSince1970: 63115200];
-        
-        MPEdnCoder *writer = [MPEdnCoder new];
-        
-        XCTAssertEqualObjects ([writer ednFromObject: date],
-                               @"#inst \"1972-01-01T12:00:00.00Z\"", @"Serialise");
-    }
+    NSDate* date = [NSDate dateWithTimeIntervalSince1970: 63115200];
     
-    // UUID
-    {
-        NSUUID *uuid =
-        [[NSUUID alloc] initWithUUIDString: @"F81D4FAE-7DEC-11D0-A765-00A0C91E6BF6"];
-        
-        MPEdnCoder *writer = [MPEdnCoder new];
-        
-        XCTAssertEqualObjects ([writer ednFromObject: uuid],
-                               @"#uuid \"F81D4FAE-7DEC-11D0-A765-00A0C91E6BF6\"", @"Serialise");
-    }
+    MPEdnCoder* writer = [MPEdnCoder new];
     
-    // custom tag (base 64)
-    {
-        uint8_t data [10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-        
-        id map = @{[@"a" asKeyword] : [NSData dataWithBytes: data length: sizeof (data)]};
-        
-        MPEdnCoder *writer = [MPEdnCoder new];
-        
-        XCTAssertEqualObjects ([writer ednFromObject: map], @"{:a #base64 \"AAECAwQFBgcICQ==\"}", @"Serialise");
-    }
-    
-//    // unknown tag
-//    {
-//        MPEdnWriter *writer = [MPEdnWriter new];
-//        
-//        id map = @{[@"a" asKeyword] : [[MPEdnTaggedValue alloc] initWithTag: @"gutentag" value: @"ja"]};
-//        
-//        XCTAssertEqualObjects ([writer serialiseToEdn: map], @"{:a #gutentag \"ja\"}", @"Tag");
-//    }
+    XCTAssertEqualObjects ([writer ednFromObject: date],
+                           @"#inst \"1972-01-01T12:00:00.00Z\"", @"Serialise");
 }
 
-//- (void) testURL {
-//    MPEdnWriter *writer = [MPEdnWriter new];
-//    [writer addTagWriter: [[MPEdnURLCodec alloc] initWithTag: @"test/url"]];
-//    
-//    XCTAssertEqualObjects ([writer serialiseToEdn: @{[@"a" asKeyword] : [[NSURL alloc] initWithString: @"http://example.com"]}],
-//                           @"{:a #test/url \"http://example.com\"}", @"Serialise");
-//}
+- (void) testUUID {
+    
+    NSUUID* uuid = [[NSUUID alloc] initWithUUIDString: @"F81D4FAE-7DEC-11D0-A765-00A0C91E6BF6"];
+    
+    MPEdnCoder* writer = [MPEdnCoder new];
+    
+    XCTAssertEqualObjects ([writer ednFromObject: uuid],
+                           @"#uuid \"F81D4FAE-7DEC-11D0-A765-00A0C91E6BF6\"", @"Serialise");
+}
+
+- (void) testBase64 {
+    // custom tag (base 64)
+    uint8_t data [10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    
+    id map = @{[@"a" asKeyword] : [NSData dataWithBytes: data length: sizeof (data)]};
+    
+    MPEdnCoder* writer = [MPEdnCoder new];
+    
+    XCTAssertEqualObjects ([writer ednFromObject: map], @"{:a #base64 \"AAECAwQFBgcICQ==\"}", @"Serialise");
+}
+
+- (void) testURL {
+    MPEdnCoder* writer = [MPEdnCoder new];
+    
+    XCTAssertEqualObjects ([writer ednFromObject: @{[@"a" asKeyword] : [[NSURL alloc] initWithString: @"http://example.com"]}],
+                           @"{:a #url \"http://example.com\"}", @"Serialise");
+}
 
 @end

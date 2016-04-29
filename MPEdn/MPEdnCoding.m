@@ -391,3 +391,29 @@ static NSDateFormatter *dateFormatter = nil;
 
 @end
 
+@implementation NSURL (MPEdn)
+
++ (NSString*) ednTag {
+    return @"url";
+}
+
+
+- (void) encodeWithEdnCoder: (MPEdnCoder*) coder {
+    NSString* urlString = [self absoluteString];
+    [coder writeString: urlString];
+}
+
++ (id) newWithEdnString: (NSString*) value error: (NSError**) errorPtr {
+    
+    NSURL* url = [[NSURL alloc] initWithString: value];
+    
+    if (url && errorPtr) {
+        *errorPtr = [NSError errorWithDomain: @"MPEdn" code: ERROR_TAG_READER_ERROR
+                                    userInfo: @{NSLocalizedDescriptionKey :
+                                                    [NSString stringWithFormat: @"Bad URL String: %@", value]}];
+    }
+    return url;
+}
+
+
+@end

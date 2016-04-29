@@ -119,4 +119,7 @@
 
 @end
 
+@interface NSURL (MPEdn) <MPEdnTaggedCoding>
+
+@end
 

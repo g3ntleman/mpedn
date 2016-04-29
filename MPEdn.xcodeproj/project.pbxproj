@@ -46,8 +46,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		C901C24A1B0DB5CE002EE8C1 /* MPEdnURLCodec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPEdnURLCodec.m; sourceTree = "<group>"; };
-		C901C24B1B0DB5CE002EE8C1 /* MPEdnURLCodec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPEdnURLCodec.h; sourceTree = "<group>"; };
 		C953E0AF16CDDDA9007E1043 /* MPEdnEncodingTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPEdnEncodingTests.h; sourceTree = "<group>"; };
 		C953E0B016CDDDA9007E1043 /* MPEdnEncodingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPEdnEncodingTests.m; sourceTree = "<group>"; };
 		C953E0B216CDDDFA007E1043 /* MPEdnCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPEdnCoder.h; sourceTree = "<group>"; };
@@ -121,8 +119,6 @@
 				C953E0B316CDDDFA007E1043 /* MPEdnCoder.m */,
 				C97339E81817592E00E901DD /* MPEdnCoding.h */,
 				C97339E91817592E00E901DD /* MPEdnCoding.m */,
-				C901C24B1B0DB5CE002EE8C1 /* MPEdnURLCodec.h */,
-				C901C24A1B0DB5CE002EE8C1 /* MPEdnURLCodec.m */,
 				C9FD3A3716C4D04700F3757E /* Supporting Files */,
 			);
 			path = MPEdn;
