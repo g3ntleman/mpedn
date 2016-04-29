@@ -4,6 +4,7 @@
  *  https://github.com/edn-format/edn.
  *
  *  Copyright (c) 2013 Matthew Phillips <m@mattp.name>
+ *  Copyright (c) 2016 Dirk Theisen <d.theisen@objectpark.org>
  *
  *  The use and distribution terms for this software are covered by
  *  the Eclipse Public License 1.0

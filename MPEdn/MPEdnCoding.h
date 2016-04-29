@@ -4,6 +4,7 @@
  *  https://github.com/edn-format/edn.
  *
  *  Copyright (c) 2013 Matthew Phillips <m@mattp.name>
+ *  Copyright (c) 2016 Dirk Theisen <d.theisen@objectpark.org>
  *
  *  The use and distribution terms for this software are covered by
  *  the Eclipse Public License 1.0
@@ -18,13 +19,13 @@
 
 @class MPEdnCoder;
 
-@protocol EdnValue <NSObject>
+@protocol MPEdnCoding <NSObject>
 
 - (void) encodeWithEdnCoder: (MPEdnCoder*) coder;
 
 @end
 
-@protocol EdnTaggedValue <EdnValue>
+@protocol MPEdnTaggedCoding <MPEdnCoding>
 
 + (NSString*) ednTag;
 + (id) newWithEdnString: (NSString*) value error: (NSError**) errorPtr;
@@ -38,12 +39,12 @@
  * that can be efficiently compared for equality using `==`.
  *
  * Instances of this class are used to represent keywords by
- * `MPEdnParser` and `MPEdnWriter`.
+ * `MPEdnCoder`.
  * 
  * See also [NSString(MPEdn) ednKeyword]
  */
 
-@interface NSString (MPEdn) <EdnValue>
+@interface NSString (MPEdn) <MPEdnCoding>
 
 /**
  * Look up the EDN keyword string instance for this string.
@@ -84,37 +85,37 @@
 
 @end
 
-@interface NSDictionary (MPEdn) <EdnValue>
+@interface NSDictionary (MPEdn) <MPEdnCoding>
 
 @end
 
-@interface NSArray (MPEdn) <EdnValue>
+@interface NSArray (MPEdn) <MPEdnCoding>
 
 @end
 
-@interface NSNull (MPEdn) <EdnValue>
-
-@end
-
-
-@interface NSNumber (MPEdn) <EdnValue>
-
-@end
-
-@interface NSSet (MPEdn) <EdnValue>
+@interface NSNull (MPEdn) <MPEdnCoding>
 
 @end
 
 
-@interface NSDate (MPEdn) <EdnTaggedValue>
+@interface NSNumber (MPEdn) <MPEdnCoding>
 
 @end
 
-@interface NSUUID (MPEdn) <EdnTaggedValue>
+@interface NSSet (MPEdn) <MPEdnCoding>
 
 @end
 
-@interface NSData (MPEdn) <EdnTaggedValue>
+
+@interface NSDate (MPEdn) <MPEdnTaggedCoding>
+
+@end
+
+@interface NSUUID (MPEdn) <MPEdnTaggedCoding>
+
+@end
+
+@interface NSData (MPEdn) <MPEdnTaggedCoding>
 
 @end
 

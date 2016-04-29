@@ -1,9 +1,8 @@
-#import "MPEdnWriterTests.h"
+#import "MPEdnEncodingTests.h"
 
 #import "MPEdnCoder.h"
 #import "MPEdn.h"
-//#import "MPEdnBase64Codec.h"
-//#import "MPEdnURLCodec.h"
+
 
 #define MPAssertSerialisesOK(value, correct)             \
 {                                                        \
@@ -12,7 +11,7 @@
   XCTAssertEqualObjects (str, correct, @"Serialise");     \
 }
 
-@implementation MPEdnWriterTests
+@implementation MPEdnEncodingTests
 
 - (void) testNumbers {
   MPAssertSerialisesOK (@1, @"1");

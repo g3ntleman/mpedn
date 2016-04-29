@@ -4,6 +4,7 @@
  *  https://github.com/edn-format/edn.
  *
  *  Copyright (c) 2013 Matthew Phillips <m@mattp.name>
+ *  Copyright (c) 2016 Dirk Theisen <d.theisen@objectpark.org>
  *
  *  The use and distribution terms for this software are covered by
  *  the Eclipse Public License 1.0
@@ -14,10 +15,9 @@
  *  You must not remove this notice, or any other, from this software.
  */
 
-#import "MPEdnValue.h"
-#import "MPEdnParser.h"
+#import "MPEdnCoding.h"
 #import "MPEdnCoder.h"
-#import <objc/runtime.h>
+//#import <objc/runtime.h>
 
 static NSCharacterSet* QUOTE_CHARS;
 static NSCharacterSet* NON_KEYWORD_CHARS;
@@ -108,14 +108,14 @@ static NSMutableSet* symbols;
     }
     
     if (self.isKeyword) {
-        [coder writeStrings: @":", self, nil];
+        [coder writeFormat: @":%@", self];
         return;
     }
     
     NSRange quoteRange = [self rangeOfCharacterFromSet: QUOTE_CHARS];
     
     if (quoteRange.location == NSNotFound) {
-        [coder writeStrings: @"\"", self, @"\"", nil];
+        [coder writeFormat: @"\"%@\"", self];
     } else {
         NSUInteger start = 0;
         NSUInteger valueLen = [self length];
@@ -137,7 +137,7 @@ static NSMutableSet* symbols;
                     [coder writeString: @"\\r"];
                     break;
                 default:
-                    [coder writeString: [NSString stringWithFormat: @"\\%C", quoteCh]];
+                    [coder writeFormat: @"\\%C", quoteCh];
             }
             
             start = quoteRange.location + 1;
@@ -176,17 +176,17 @@ static NSMutableSet* symbols;
                 [coder writeString: [self description]];
                 break;
             case 'd':
-                [coder writeString: [NSString stringWithFormat: @"%.15E", [self doubleValue]]];
+                [coder writeFormat: @"%.15E", [self doubleValue]];
                 break;
             case 'f':
-                [coder writeString: [NSString stringWithFormat: @"%.7E", [self doubleValue]]];
+                [coder writeFormat: @"%.7E", [self doubleValue]];
                 break;
             case 'c':
             {
                 if ([NSStringFromClass ([self class]) isEqualToString: @"__NSCFBoolean"])
                     [coder writeString: [self boolValue] ? @"true" : @"false"];
                 else
-                    [coder writeString: [NSString stringWithFormat: @"\\%c", [self charValue]]];
+                    [coder writeFormat: @"\\%c", [self charValue]];
                 
                 break;
             default:
@@ -216,8 +216,8 @@ static NSMutableSet* symbols;
     
     [coder writeString: @"{"];
     
-    for (id<EdnValue> key in self) {
-        id<EdnValue> value = self[key];
+    for (id<MPEdnCoding> key in self) {
+        id<MPEdnCoding> value = self[key];
         
         if (!firstItem) {
             [coder writeString: @","];
@@ -243,7 +243,7 @@ static NSMutableSet* symbols;
     
     [coder writeString: @"["];
     
-    for (id<EdnValue> item in self) {
+    for (id<MPEdnCoding> item in self) {
         if (!firstItem) {
             [coder writeString: @","];
         }
@@ -296,7 +296,7 @@ static NSDateFormatter *dateFormatter = nil;
         dateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss.SSXXXXX";
         dateFormatter.timeZone = [NSTimeZone timeZoneWithAbbreviation: @"UTC"];
         
-        [MPEdnParser registerDefaultClass: self];
+        [MPEdnCoder registerDefaultClass: self];
     }
 }
 
@@ -331,7 +331,7 @@ static NSDateFormatter *dateFormatter = nil;
 @implementation NSUUID (MPEdn)
 
 + (void) load {
-    [MPEdnParser registerDefaultClass: self];
+    [MPEdnCoder registerDefaultClass: self];
 }
 
 - (void) encodeWithEdnCoder: (MPEdnCoder*) coder {
@@ -362,7 +362,7 @@ static NSDateFormatter *dateFormatter = nil;
 @implementation NSData (MPEdn)
 
 + (void) load {
-    [MPEdnParser registerDefaultClass: self];
+    [MPEdnCoder registerDefaultClass: self];
 }
 
 - (void) encodeWithEdnCoder: (MPEdnCoder*) coder {
@@ -375,7 +375,11 @@ static NSDateFormatter *dateFormatter = nil;
 }
 
 + (id) newWithEdnString: (NSString*) value error: (NSError**) errorPtr {
-    NSData* data = [[NSData alloc] initWithBase64EncodedString: value options: 0];
+    
+    value = [value copy];
+    
+    NSData* data = [[NSData alloc] initWithBase64EncodedString: value
+                                                       options: 0];
     
     if (! data && errorPtr) {
         *errorPtr = [NSError errorWithDomain: @"MPEdn" code: ERROR_TAG_READER_ERROR
