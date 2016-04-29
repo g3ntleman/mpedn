@@ -46,6 +46,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		8D48B5F61CD41093007F2A77 /* MPEDN.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = MPEDN.podspec; sourceTree = "<group>"; };
 		C953E0AF16CDDDA9007E1043 /* MPEdnEncodingTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPEdnEncodingTests.h; sourceTree = "<group>"; };
 		C953E0B016CDDDA9007E1043 /* MPEdnEncodingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPEdnEncodingTests.m; sourceTree = "<group>"; };
 		C953E0B216CDDDFA007E1043 /* MPEdnCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPEdnCoder.h; sourceTree = "<group>"; };
@@ -87,6 +88,7 @@
 		C9FD3A2616C4D04700F3757E = {
 			isa = PBXGroup;
 			children = (
+				8D48B5F61CD41093007F2A77 /* MPEDN.podspec */,
 				C9FD3A3616C4D04700F3757E /* MPEdn */,
 				C9FD3A4B16C4D04800F3757E /* MPEdnTests */,
 				C9FD3A3316C4D04700F3757E /* Frameworks */,

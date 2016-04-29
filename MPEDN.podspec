@@ -3,16 +3,13 @@
 Pod::Spec.new do |s|
 
   s.name         = "MPEDN"
-  s.version      = "1.0.0"
+  s.version      = "2.0.0"
   s.summary      = "An EDN (Extensible Data Notation) Objective C library for OS X and iOS."
 
   s.description  = <<-DESC
     The library includes:
 
-    * `MPEdnParser`, a parser for reading EDN and generating equivalent Cocoa data
-      structures.
-
-    * `MPEdnWriter`, which writes Cocoa data structures as EDN.
+    * `MPEdnCoder`, a parser / generator for reading EDN into equivalent Cocoa data and for writing EDN from Cocoa data structures.
 
     For most uses, parsing EDN is as simple as:
 
@@ -27,10 +24,10 @@ Pod::Spec.new do |s|
     See the headers for API docs.
     DESC
 
-  s.homepage     = "https://github.com/scramjet/mpedn"
+  s.homepage     = "https://github.com/g3ntleman/mpedn"
   s.license      = { :type => "Eclipse", :file => "LICENSE" }
-  s.author       = { "Matthew Phillips" => "m@mattp.name" }
-  s.source       = { :git => "https://github.com/scramjet/mpedn.git", :tag => "1.0.0" }
+  s.author       = { "Matthew Phillips, Dirk Theisen" => "m@mattp.name, d.theisen@objectpark.org" }
+  s.source       = { :git => "https://github.com/g3ntleman/mpedn.git", :tag => "2.0.0" }
   s.source_files = "MPEdn"
   s.requires_arc = true
 end
