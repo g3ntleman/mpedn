@@ -19,6 +19,9 @@
 
 @class MPEdnCoder;
 
+extern NSCharacterSet* MPEdnNonKeywordChars;
+extern NSCharacterSet* MPEdnNonSymbolChars;
+
 @protocol MPEdnCoding <NSObject>
 
 - (void) encodeWithEdnCoder: (MPEdnCoder*) coder;

@@ -20,8 +20,8 @@
 //#import <objc/runtime.h>
 
 static NSCharacterSet* QUOTE_CHARS;
-static NSCharacterSet* NON_KEYWORD_CHARS;
-static NSCharacterSet* NON_SYMBOL_CHARS;
+NSCharacterSet* MPEdnNonKeywordChars;
+NSCharacterSet* MPEdnNonSymbolChars;
 static NSMutableSet* keywords;
 static NSMutableSet* symbols;
 
@@ -41,14 +41,14 @@ static NSMutableSet* symbols;
         [NSMutableCharacterSet characterSetWithCharactersInString: @".*+!-_?$<>'=/"];
         [nonSymbolChars formUnionWithCharacterSet: [NSCharacterSet alphanumericCharacterSet]];
         [nonSymbolChars invert];
-        NON_SYMBOL_CHARS = [nonSymbolChars copy];
+        MPEdnNonSymbolChars = [nonSymbolChars copy];
 
         keywords = [[NSMutableSet alloc] initWithCapacity: 20];
         NSMutableCharacterSet* nonKeywordChars =
         [NSMutableCharacterSet characterSetWithCharactersInString: @".*+!-_?$%&=/"];
         [nonKeywordChars formUnionWithCharacterSet: [NSCharacterSet alphanumericCharacterSet]];
         [nonKeywordChars invert];
-        NON_KEYWORD_CHARS = [nonKeywordChars copy];
+        MPEdnNonKeywordChars = [nonKeywordChars copy];
         
         QUOTE_CHARS = [NSCharacterSet characterSetWithCharactersInString: @"\\\"\n\r"];
     }
@@ -56,7 +56,7 @@ static NSMutableSet* symbols;
 
 
 - (BOOL) isValidKeyword {
-    return [self rangeOfCharacterFromSet: NON_KEYWORD_CHARS].location == NSNotFound;
+    return [self rangeOfCharacterFromSet: MPEdnNonKeywordChars].location == NSNotFound;
 }
 
 - (BOOL) isValidSymbol {
@@ -64,7 +64,7 @@ static NSMutableSet* symbols;
     // alphanumeric characters and *, +, !, -, _, and ?.  (see
     // http://clojure.org/reader for details).
 
-    return [self rangeOfCharacterFromSet: NON_SYMBOL_CHARS].location == NSNotFound;
+    return [self rangeOfCharacterFromSet: MPEdnNonSymbolChars].location == NSNotFound;
 }
 
 - (NSString*) asKeyword {
